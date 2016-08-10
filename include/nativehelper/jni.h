@@ -483,6 +483,8 @@ struct JNINativeInterface {
     /* added in JNI 1.6 */
     jobjectRefType (*GetObjectRefType)(JNIEnv*, jobject);
 
+	const char*	(*GetArrayType)(JNIEnv*, jarray jarr);
+
     jobject     (*GetObjectTaintedField)(JNIEnv*, jobject, jfieldID, u4*);
     jboolean    (*GetBooleanTaintedField)(JNIEnv*, jobject, jfieldID, u4*);
     jbyte       (*GetByteTaintedField)(JNIEnv*, jobject, jfieldID, u4*);
