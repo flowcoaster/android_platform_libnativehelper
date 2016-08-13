@@ -485,6 +485,9 @@ struct JNINativeInterface {
 
 	const char*	(*GetArrayType)(JNIEnv*, jarray jarr);
 
+    jstring     (*NewTaintedStringUTF)(JNIEnv*, const char*, u4);
+    const char* (*GetTaintedStringUTFChars)(JNIEnv*, jstring, jboolean*, u4*);
+
     jobject     (*GetObjectTaintedField)(JNIEnv*, jobject, jfieldID, u4*);
     jboolean    (*GetBooleanTaintedField)(JNIEnv*, jobject, jfieldID, u4*);
     jbyte       (*GetByteTaintedField)(JNIEnv*, jobject, jfieldID, u4*);
@@ -516,6 +519,28 @@ struct JNINativeInterface {
     jfloat      (*CallFloatTaintedMethodA)(JNIEnv*, jobject, u4, jmethodID, u4*, jvalue*, u4*);
     jdouble     (*CallDoubleTaintedMethodA)(JNIEnv*, jobject, u4, jmethodID, u4*, jvalue*, u4*);
     void        (*CallVoidTaintedMethodA)(JNIEnv*, jobject, u4, jmethodID, u4*, jvalue*, u4*);
+
+    jobject     (*CallNonvirtualObjectTaintedMethodA)(JNIEnv*, jobject, u4, jclass, jmethodID, u4*, jvalue*, u4*);
+    jboolean    (*CallNonvirtualBooleanTaintedMethodA)(JNIEnv*, jobject, u4, jclass, jmethodID, u4*, jvalue*, u4*);
+    jbyte       (*CallNonvirtualByteTaintedMethodA)(JNIEnv*, jobject, u4, jclass, jmethodID, u4*, jvalue*, u4*);
+    jchar       (*CallNonvirtualCharTaintedMethodA)(JNIEnv*, jobject, u4, jclass, jmethodID, u4*, jvalue*, u4*);
+    jshort      (*CallNonvirtualShortTaintedMethodA)(JNIEnv*, jobject, u4, jclass, jmethodID, u4*, jvalue*, u4*);
+    jint        (*CallNonvirtualIntTaintedMethodA)(JNIEnv*, jobject, u4, jclass, jmethodID, u4*, jvalue*, u4*);
+    jlong       (*CallNonvirtualLongTaintedMethodA)(JNIEnv*, jobject, u4, jclass, jmethodID, u4*, jvalue*, u4*);
+    jfloat      (*CallNonvirtualFloatTaintedMethodA)(JNIEnv*, jobject, u4, jclass, jmethodID, u4*, jvalue*, u4*);
+    jdouble     (*CallNonvirtualDoubleTaintedMethodA)(JNIEnv*, jobject, u4, jclass, jmethodID, u4*, jvalue*, u4*);
+    void        (*CallNonvirtualVoidTaintedMethodA)(JNIEnv*, jobject, u4, jclass, jmethodID, u4*, jvalue*, u4*);
+
+    jobject     (*CallStaticObjectTaintedMethodA)(JNIEnv*, jclass, jmethodID, u4*, jvalue*, u4*);
+    jboolean    (*CallStaticBooleanTaintedMethodA)(JNIEnv*, jclass, jmethodID, u4*, jvalue*, u4*);
+    jbyte       (*CallStaticByteTaintedMethodA)(JNIEnv*, jclass, jmethodID, u4*, jvalue*, u4*);
+    jchar       (*CallStaticCharTaintedMethodA)(JNIEnv*, jclass, jmethodID, u4*, jvalue*, u4*);
+    jshort      (*CallStaticShortTaintedMethodA)(JNIEnv*, jclass, jmethodID, u4*, jvalue*, u4*);
+    jint        (*CallStaticIntTaintedMethodA)(JNIEnv*, jclass, jmethodID, u4*, jvalue*, u4*);
+    jlong       (*CallStaticLongTaintedMethodA)(JNIEnv*, jclass, jmethodID, u4*, jvalue*, u4*);
+    jfloat      (*CallStaticFloatTaintedMethodA)(JNIEnv*, jclass, jmethodID, u4*, jvalue*, u4*);
+    jdouble     (*CallStaticDoubleTaintedMethodA)(JNIEnv*, jclass, jmethodID, u4*, jvalue*, u4*);
+    void        (*CallStaticVoidTaintedMethodA)(JNIEnv*, jclass, jmethodID, u4*, jvalue*, u4*);
 };
 
 /*
