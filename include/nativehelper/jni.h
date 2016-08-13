@@ -541,6 +541,26 @@ struct JNINativeInterface {
     jfloat      (*CallStaticFloatTaintedMethodA)(JNIEnv*, jclass, jmethodID, u4*, jvalue*, u4*);
     jdouble     (*CallStaticDoubleTaintedMethodA)(JNIEnv*, jclass, jmethodID, u4*, jvalue*, u4*);
     void        (*CallStaticVoidTaintedMethodA)(JNIEnv*, jclass, jmethodID, u4*, jvalue*, u4*);
+
+    jobject     (*GetStaticObjectTaintedField)(JNIEnv*, jclass, jfieldID, u4*);
+    jboolean    (*GetStaticBooleanTaintedField)(JNIEnv*, jclass, jfieldID, u4*);
+    jbyte       (*GetStaticByteTaintedField)(JNIEnv*, jclass, jfieldID, u4*);
+    jchar       (*GetStaticCharTaintedField)(JNIEnv*, jclass, jfieldID, u4*);
+    jshort      (*GetStaticShortTaintedField)(JNIEnv*, jclass, jfieldID, u4*);
+    jint        (*GetStaticIntTaintedField)(JNIEnv*, jclass, jfieldID, u4*);
+    jlong       (*GetStaticLongTaintedField)(JNIEnv*, jclass, jfieldID, u4*);
+    jfloat      (*GetStaticFloatTaintedField)(JNIEnv*, jclass, jfieldID, u4*);
+    jdouble     (*GetStaticDoubleTaintedField)(JNIEnv*, jclass, jfieldID, u4*);
+
+    void        (*SetStaticObjectTaintedField)(JNIEnv*, jclass, jfieldID, jobject, u4);
+    void        (*SetStaticBooleanTaintedField)(JNIEnv*, jclass, jfieldID, jboolean, u4);
+    void        (*SetStaticByteTaintedField)(JNIEnv*, jclass, jfieldID, jbyte, u4);
+    void        (*SetStaticCharTaintedField)(JNIEnv*, jclass, jfieldID, jchar, u4);
+    void        (*SetStaticShortTaintedField)(JNIEnv*, jclass, jfieldID, jshort, u4);
+    void        (*SetStaticIntTaintedField)(JNIEnv*, jclass, jfieldID, jint, u4);
+    void        (*SetStaticLongTaintedField)(JNIEnv*, jclass, jfieldID, jlong, u4);
+    void        (*SetStaticFloatTaintedField)(JNIEnv*, jclass, jfieldID, jfloat, u4);
+    void        (*SetStaticDoubleTaintedField)(JNIEnv*, jclass, jfieldID, jdouble, u4);
 };
 
 /*
@@ -670,7 +690,12 @@ struct _JNIEnv {
 #define CALL_TYPE_METHODA(_jtype, _jname)                                   \
     _jtype Call##_jname##MethodA(jobject obj, jmethodID methodID,           \
         jvalue* args)                                                       \
-    { return functions->Call##_jname##MethodA(this, obj, methodID, args); }
+    { return functions->Call##_jname##MethodA(this, obj, methodID, args); } \
+    _jtype Call##_jname##TaintedMethodA(jobject obj, u4 objTaint,           \
+             jmethodID methodID, u4* resultTaint, jvalue* args, u4* taints) \
+    { return functions->Call##_jname##TaintedMethodA(this, obj, objTaint,   \
+                                    methodID, resultTaint, args, taints); }
+
 
 #define CALL_TYPE(_jtype, _jname)                                           \
     CALL_TYPE_METHOD(_jtype, _jname)                                        \
@@ -698,6 +723,8 @@ struct _JNIEnv {
     { functions->CallVoidMethodV(this, obj, methodID, args); }
     void CallVoidMethodA(jobject obj, jmethodID methodID, jvalue* args)
     { functions->CallVoidMethodA(this, obj, methodID, args); }
+    void CallVoidTaintedMethodA(jobject obj, u4 objTaint, jmethodID methodID, u4* resultTaint, jvalue* args, u4* taints)
+    { functions->CallVoidTaintedMethodA(this, obj, objTaint, methodID, resultTaint, args, taints); }
 
 #define CALL_NONVIRT_TYPE_METHOD(_jtype, _jname)                            \
     _jtype CallNonvirtual##_jname##Method(jobject obj, jclass clazz,        \
@@ -720,7 +747,12 @@ struct _JNIEnv {
     _jtype CallNonvirtual##_jname##MethodA(jobject obj, jclass clazz,       \
         jmethodID methodID, jvalue* args)                                   \
     { return functions->CallNonvirtual##_jname##MethodA(this, obj, clazz,   \
-        methodID, args); }
+        methodID, args); }                                                  \
+    _jtype CallNonvirtual##_jname##TaintedMethodA(jobject obj, u4 objTaint, \
+        jclass jclazz, jmethodID methodID, u4* resultTaint, jvalue* args,   \
+         u4* taints)                                                        \
+    { return functions->CallNonvirtual##_jname##TaintedMethodA(this, obj,   \
+                 objTaint, jclazz, methodID, resultTaint, args, taints); }
 
 #define CALL_NONVIRT_TYPE(_jtype, _jname)                                   \
     CALL_NONVIRT_TYPE_METHOD(_jtype, _jname)                                \
@@ -751,6 +783,11 @@ struct _JNIEnv {
     void CallNonvirtualVoidMethodA(jobject obj, jclass clazz,
         jmethodID methodID, jvalue* args)
     { functions->CallNonvirtualVoidMethodA(this, obj, clazz, methodID, args); }
+    void CallNonvirtualVoidTaintedMethodA(jobject obj, u4 objTaint,
+         jclass jclazz, jmethodID methodID, u4* resultTaint, jvalue* args,
+         u4* taints)
+    { functions->CallNonvirtualVoidTaintedMethodA(this, obj,
+                      objTaint, jclazz, methodID, resultTaint, args, taints); }
 
     jfieldID GetFieldID(jclass clazz, const char* name, const char* sig)
     { return functions->GetFieldID(this, clazz, name, sig); }
@@ -817,7 +854,11 @@ struct _JNIEnv {
     _jtype CallStatic##_jname##MethodA(jclass clazz, jmethodID methodID,    \
         jvalue* args)                                                       \
     { return functions->CallStatic##_jname##MethodA(this, clazz, methodID,  \
-        args); }
+        args); }                                                            \
+    _jtype CallStatic##_jname##TaintedMethodA(jclass clazz, jmethodID methodID, \
+                             u4* resultTaint, jvalue* args, u4* taints)     \
+    { return functions->CallStatic##_jname##TaintedMethodA(this, clazz,     \
+                         methodID, resultTaint, args, taints); }
 
 #define CALL_STATIC_TYPE(_jtype, _jname)                                    \
     CALL_STATIC_TYPE_METHOD(_jtype, _jname)                                 \
@@ -845,6 +886,10 @@ struct _JNIEnv {
     { functions->CallStaticVoidMethodV(this, clazz, methodID, args); }
     void CallStaticVoidMethodA(jclass clazz, jmethodID methodID, jvalue* args)
     { functions->CallStaticVoidMethodA(this, clazz, methodID, args); }
+    void CallStaticVoidTaintedMethodA(jclass clazz, jmethodID methodID, u4* resultTaint, jvalue* args, u4* taints)
+    {
+      functions->CallStaticVoidTaintedMethodA(this, clazz, methodID, resultTaint, args, taints);
+    }
 
     jfieldID GetStaticFieldID(jclass clazz, const char* name, const char* sig)
     { return functions->GetStaticFieldID(this, clazz, name, sig); }
@@ -868,6 +913,25 @@ struct _JNIEnv {
     jdouble GetStaticDoubleField(jclass clazz, jfieldID fieldID)
     { return functions->GetStaticDoubleField(this, clazz, fieldID); }
 
+  	jobject GetObjectTaintedField(jobject obj, jfieldID field, u4* taint)
+	{ return functions->GetObjectTaintedField(this, obj, field, taint); }
+	jboolean GetBooleanTaintedField(jobject obj, jfieldID field, u4* taint)
+	{ return functions->GetBooleanTaintedField(this, obj, field, taint); }
+	jbyte GetByteTaintedField(jobject obj, jfieldID field, u4* taint)
+	{ return functions->GetByteTaintedField(this, obj, field, taint); }
+	jchar GetCharTaintedField(jobject obj, jfieldID field, u4* taint)
+	{ return functions->GetCharTaintedField(this, obj, field, taint); }
+	jshort GetShortTaintedField(jobject obj, jfieldID field, u4* taint)
+	{ return functions->GetShortTaintedField(this, obj, field, taint); }
+	jint GetIntTaintedField(jobject obj, jfieldID field, u4* taint)
+	{ return functions->GetIntTaintedField(this, obj, field, taint); }
+	jlong GetLongTaintedField(jobject obj, jfieldID field, u4* taint)
+	{ return functions->GetLongTaintedField(this, obj, field, taint); }
+	jfloat GetFloatTaintedField(jobject obj, jfieldID field, u4* taint)
+	{ return functions->GetFloatTaintedField(this, obj, field, taint); }
+	jdouble GetDoubleTaintedField(jobject obj, jfieldID field, u4* taint)
+	{ return functions->GetDoubleTaintedField(this, obj, field, taint); }
+
     void SetStaticObjectField(jclass clazz, jfieldID fieldID, jobject value)
     { functions->SetStaticObjectField(this, clazz, fieldID, value); }
     void SetStaticBooleanField(jclass clazz, jfieldID fieldID, jboolean value)
@@ -887,6 +951,25 @@ struct _JNIEnv {
     void SetStaticDoubleField(jclass clazz, jfieldID fieldID, jdouble value)
     { functions->SetStaticDoubleField(this, clazz, fieldID, value); }
 
+  	void SetObjectTaintedField(jobject obj, jfieldID field, jobject val, u4 taint)
+	{ return functions->SetObjectTaintedField(this, obj, field, val, taint); }
+	void SetBooleanTaintedField(jobject obj, jfieldID field, jboolean val, u4 taint)
+	{ return functions->SetBooleanTaintedField(this, obj, field, val, taint); }
+	void SetByteTaintedField(jobject obj, jfieldID field, jbyte val, u4 taint)
+	{ return functions->SetByteTaintedField(this, obj, field, val, taint); }
+	void SetCharTaintedField(jobject obj, jfieldID field, jchar val, u4 taint)
+	{ return functions->SetCharTaintedField(this, obj, field, val, taint); }
+	void SetShortTaintedField(jobject obj, jfieldID field, jshort val, u4 taint)
+	{ return functions->SetShortTaintedField(this, obj, field, val, taint); }
+	void SetIntTaintedField(jobject obj, jfieldID field, jint val, u4 taint)
+	{ return functions->SetIntTaintedField(this, obj, field, val, taint); }
+	void SetLongTaintedField(jobject obj, jfieldID field, jlong val, u4 taint)
+	{ return functions->SetLongTaintedField(this, obj, field, val, taint); }
+	void SetFloatTaintedField(jobject obj, jfieldID field, jfloat val, u4 taint)
+	{ return functions->SetFloatTaintedField(this, obj, field, val, taint); }
+	void SetDoubleTaintedField(jobject obj, jfieldID field, jdouble val, u4 taint)
+	{ return functions->SetDoubleTaintedField(this, obj, field, val, taint); }
+
     jstring NewString(const jchar* unicodeChars, jsize len)
     { return functions->NewString(this, unicodeChars, len); }
 
@@ -902,11 +985,17 @@ struct _JNIEnv {
     jstring NewStringUTF(const char* bytes)
     { return functions->NewStringUTF(this, bytes); }
 
+    jstring NewTaintedStringUTF(const char* bytes, u4 taint)
+    { return functions->NewTaintedStringUTF(this, bytes, taint); }
+
     jsize GetStringUTFLength(jstring string)
     { return functions->GetStringUTFLength(this, string); }
 
     const char* GetStringUTFChars(jstring string, jboolean* isCopy)
     { return functions->GetStringUTFChars(this, string, isCopy); }
+
+    const char* GetTaintedStringUTFChars(jstring string, jboolean* isCopy, u4* taint)
+    { return functions->GetTaintedStringUTFChars(this, string, isCopy, taint); }
 
     void ReleaseStringUTFChars(jstring string, const char* utf)
     { functions->ReleaseStringUTFChars(this, string, utf); }
