@@ -484,30 +484,8 @@ struct JNINativeInterface {
     jobjectRefType (*GetObjectRefType)(JNIEnv*, jobject);
 
 	const char*	(*GetArrayType)(JNIEnv*, jarray jarr);
-
-    jstring     (*NewTaintedStringUTF)(JNIEnv*, const char*, u4);
-    const char* (*GetTaintedStringUTFChars)(JNIEnv*, jstring, jboolean*, u4*);
-
-    jobject     (*GetObjectTaintedField)(JNIEnv*, jobject, jfieldID, u4*);
-    jboolean    (*GetBooleanTaintedField)(JNIEnv*, jobject, jfieldID, u4*);
-    jbyte       (*GetByteTaintedField)(JNIEnv*, jobject, jfieldID, u4*);
-    jchar       (*GetCharTaintedField)(JNIEnv*, jobject, jfieldID, u4*);
-    jshort      (*GetShortTaintedField)(JNIEnv*, jobject, jfieldID, u4*);
-    jint        (*GetIntTaintedField)(JNIEnv*, jobject, jfieldID, u4*);
-    jlong       (*GetLongTaintedField)(JNIEnv*, jobject, jfieldID, u4*);
-    jfloat      (*GetFloatTaintedField)(JNIEnv*, jobject, jfieldID, u4*);
-    jdouble     (*GetDoubleTaintedField)(JNIEnv*, jobject, jfieldID, u4*);
-
-    void        (*SetObjectTaintedField)(JNIEnv*, jobject, jfieldID, jobject, u4);
-    void        (*SetBooleanTaintedField)(JNIEnv*, jobject, jfieldID, jboolean, u4);
-    void        (*SetByteTaintedField)(JNIEnv*, jobject, jfieldID, jbyte, u4);
-    void        (*SetCharTaintedField)(JNIEnv*, jobject, jfieldID, jchar, u4);
-    void        (*SetShortTaintedField)(JNIEnv*, jobject, jfieldID, jshort, u4);
-    void        (*SetIntTaintedField)(JNIEnv*, jobject, jfieldID, jint, u4);
-    void        (*SetLongTaintedField)(JNIEnv*, jobject, jfieldID, jlong, u4);
-    void        (*SetFloatTaintedField)(JNIEnv*, jobject, jfieldID, jfloat, u4);
-    void        (*SetDoubleTaintedField)(JNIEnv*, jobject, jfieldID, jdouble, u4);
-
+  
+    jobject     (*NewTaintedObjectA)(JNIEnv*, jclass, jmethodID, u4, jvalue*, u4*);
 
     jobject     (*CallObjectTaintedMethodA)(JNIEnv*, jobject, u4, jmethodID, u4*, jvalue*, u4*);
     jboolean    (*CallBooleanTaintedMethodA)(JNIEnv*, jobject, u4, jmethodID, u4*, jvalue*, u4*);
@@ -530,6 +508,26 @@ struct JNINativeInterface {
     jfloat      (*CallNonvirtualFloatTaintedMethodA)(JNIEnv*, jobject, u4, jclass, jmethodID, u4*, jvalue*, u4*);
     jdouble     (*CallNonvirtualDoubleTaintedMethodA)(JNIEnv*, jobject, u4, jclass, jmethodID, u4*, jvalue*, u4*);
     void        (*CallNonvirtualVoidTaintedMethodA)(JNIEnv*, jobject, u4, jclass, jmethodID, u4*, jvalue*, u4*);
+
+    jobject     (*GetObjectTaintedField)(JNIEnv*, jobject, jfieldID, u4*);
+    jboolean    (*GetBooleanTaintedField)(JNIEnv*, jobject, jfieldID, u4*);
+    jbyte       (*GetByteTaintedField)(JNIEnv*, jobject, jfieldID, u4*);
+    jchar       (*GetCharTaintedField)(JNIEnv*, jobject, jfieldID, u4*);
+    jshort      (*GetShortTaintedField)(JNIEnv*, jobject, jfieldID, u4*);
+    jint        (*GetIntTaintedField)(JNIEnv*, jobject, jfieldID, u4*);
+    jlong       (*GetLongTaintedField)(JNIEnv*, jobject, jfieldID, u4*);
+    jfloat      (*GetFloatTaintedField)(JNIEnv*, jobject, jfieldID, u4*);
+    jdouble     (*GetDoubleTaintedField)(JNIEnv*, jobject, jfieldID, u4*);
+
+    void        (*SetObjectTaintedField)(JNIEnv*, jobject, jfieldID, jobject, u4);
+    void        (*SetBooleanTaintedField)(JNIEnv*, jobject, jfieldID, jboolean, u4);
+    void        (*SetByteTaintedField)(JNIEnv*, jobject, jfieldID, jbyte, u4);
+    void        (*SetCharTaintedField)(JNIEnv*, jobject, jfieldID, jchar, u4);
+    void        (*SetShortTaintedField)(JNIEnv*, jobject, jfieldID, jshort, u4);
+    void        (*SetIntTaintedField)(JNIEnv*, jobject, jfieldID, jint, u4);
+    void        (*SetLongTaintedField)(JNIEnv*, jobject, jfieldID, jlong, u4);
+    void        (*SetFloatTaintedField)(JNIEnv*, jobject, jfieldID, jfloat, u4);
+    void        (*SetDoubleTaintedField)(JNIEnv*, jobject, jfieldID, jdouble, u4);
 
     jobject     (*CallStaticObjectTaintedMethodA)(JNIEnv*, jclass, jmethodID, u4*, jvalue*, u4*);
     jboolean    (*CallStaticBooleanTaintedMethodA)(JNIEnv*, jclass, jmethodID, u4*, jvalue*, u4*);
@@ -561,6 +559,55 @@ struct JNINativeInterface {
     void        (*SetStaticLongTaintedField)(JNIEnv*, jclass, jfieldID, jlong, u4);
     void        (*SetStaticFloatTaintedField)(JNIEnv*, jclass, jfieldID, jfloat, u4);
     void        (*SetStaticDoubleTaintedField)(JNIEnv*, jclass, jfieldID, jdouble, u4);
+
+    const jchar* (*GetTaintedStringChars)(JNIEnv*, jstring, jboolean*, u4*);
+
+    jstring     (*NewTaintedStringUTF)(JNIEnv*, const char*, u4);
+    const char* (*GetTaintedStringUTFChars)(JNIEnv*, jstring, jboolean*, u4*);
+
+    jboolean*   (*GetTaintedBooleanArrayElements)(JNIEnv*, jbooleanArray, jboolean*, u4*);
+    jbyte*      (*GetTaintedByteArrayElements)(JNIEnv*, jbyteArray, jboolean*, u4*);
+    jchar*      (*GetTaintedCharArrayElements)(JNIEnv*, jcharArray, jboolean*, u4*);
+    jshort*     (*GetTaintedShortArrayElements)(JNIEnv*, jshortArray, jboolean*, u4*);
+    jint*       (*GetTaintedIntArrayElements)(JNIEnv*, jintArray, jboolean*, u4*);
+    jlong*      (*GetLongArrayElementsLongArrayElements)(JNIEnv*, jlongArray, jboolean*, u4*);
+    jfloat*     (*GetLongArrayElementsFloatArrayElements)(JNIEnv*, jfloatArray, jboolean*, u4*);
+    jdouble*    (*GetLongArrayElementsDoubleArrayElements)(JNIEnv*, jdoubleArray, jboolean*, u4*);
+
+    void        (*ReleaseTaintedBooleanArrayElements)(JNIEnv*, jbooleanArray,
+                                                      jboolean*, jint, u4);
+    void        (*ReleaseTaintedByteArrayElements)(JNIEnv*, jbyteArray,
+                                                   jbyte*, jint, u4);
+    void        (*ReleaseTaintedCharArrayElements)(JNIEnv*, jcharArray,
+                                                   jchar*, jint, u4);
+    void        (*ReleaseTaintedShortArrayElements)(JNIEnv*, jshortArray,
+                                                    jshort*, jint, u4);
+    void        (*ReleaseTaintedIntArrayElements)(JNIEnv*, jintArray,
+                                                  jint*, jint, u4);
+    void        (*ReleaseTaintedLongArrayElements)(JNIEnv*, jlongArray,
+                                                   jlong*, jint, u4);
+    void        (*ReleaseTaintedFloatArrayElements)(JNIEnv*, jfloatArray,
+                                                    jfloat*, jint, u4);
+    void        (*ReleaseTaintedDoubleArrayElements)(JNIEnv*, jdoubleArray,
+                                                     jdouble*, jint, u4);
+
+    void        (*GetTaintedBooleanArrayRegion)(JNIEnv*, jbooleanArray, jsize, jsize, jboolean*, u4*);
+    void        (*GetTaintedByteArrayRegion)(JNIEnv*, jbyteArray, jsize, jsize, jbyte*, u4*);
+    void        (*GetTaintedCharArrayRegion)(JNIEnv*, jcharArray, jsize, jsize, jchar*, u4*);
+    void        (*GetTaintedShortArrayRegion)(JNIEnv*, jshortArray, jsize, jsize, jshort*, u4*);
+    void        (*GetTaintedIntArrayRegion)(JNIEnv*, jintArray, jsize, jsize, jint*, u4*);
+    void        (*GetTaintedLongArrayRegion)(JNIEnv*, jlongArray, jsize, jsize, jlong*, u4*);
+    void        (*GetTaintedFloatArrayRegion)(JNIEnv*, jfloatArray, jsize, jsize, jfloat*, u4*);
+    void        (*GetTaintedDoubleArrayRegion)(JNIEnv*, jdoubleArray, jsize, jsize, jdouble*, u4*);
+
+    void        (*SetTaintedBooleanArrayRegion)(JNIEnv*, jbooleanArray, jsize, jsize, const jboolean*, u4);
+    void        (*SetTaintedByteArrayRegion)(JNIEnv*, jbyteArray, jsize, jsize, const jbyte*, u4);
+    void        (*SetTaintedCharArrayRegion)(JNIEnv*, jcharArray, jsize, jsize, const jchar*, u4);
+    void        (*SetTaintedShortArrayRegion)(JNIEnv*, jshortArray, jsize, jsize, const jshort*, u4);
+    void        (*SetTaintedIntArrayRegion)(JNIEnv*, jintArray, jsize, jsize, const jint*, u4);
+    void        (*SetTaintedLongArrayRegion)(JNIEnv*, jlongArray, jsize, jsize, const jlong*, u4);
+    void        (*SetTaintedFloatArrayRegion)(JNIEnv*, jfloatArray, jsize, jsize, const jfloat*, u4);
+    void        (*SetTaintedDoubleArrayRegion)(JNIEnv*, jdoubleArray, jsize, jsize, const jdouble*, u4);
 };
 
 /*
@@ -662,6 +709,9 @@ struct _JNIEnv {
 
     jobject NewObjectA(jclass clazz, jmethodID methodID, jvalue* args)
     { return functions->NewObjectA(this, clazz, methodID, args); }
+
+    jobject NewTaintedObjectA(jclass clazz, jmethodID methodID, u4 objTaint, jvalue* args, u4* taints)
+    { return functions->NewTaintedObjectA(this, clazz, methodID, objTaint, args, taints); }
 
     jclass GetObjectClass(jobject obj)
     { return functions->GetObjectClass(this, obj); }
@@ -979,6 +1029,9 @@ struct _JNIEnv {
     const jchar* GetStringChars(jstring string, jboolean* isCopy)
     { return functions->GetStringChars(this, string, isCopy); }
 
+    const jchar* GetTaintedStringChars(jstring string, jboolean* isCopy, u4* taint)
+    { return functions->GetTaintedStringChars(this, string, isCopy, taint); }
+  
     void ReleaseStringChars(jstring string, const jchar* chars)
     { functions->ReleaseStringChars(this, string, chars); }
 
@@ -1048,6 +1101,23 @@ struct _JNIEnv {
     jdouble* GetDoubleArrayElements(jdoubleArray array, jboolean* isCopy)
     { return functions->GetDoubleArrayElements(this, array, isCopy); }
 
+    jboolean* GetTaintedBooleanArrayElements(jbooleanArray array, jboolean* isCopy, u4* taint)
+    { return functions->GetTaintedBooleanArrayElements(this, array, isCopy, taint); }
+    jbyte* GetTaintedByteArrayElements(jbyteArray array, jboolean* isCopy, u4* taint)
+    { return functions->GetTaintedByteArrayElements(this, array, isCopy, taint); }
+    jchar* GetTaintedCharArrayElements(jcharArray array, jboolean* isCopy, u4* taint)
+    { return functions->GetTaintedCharArrayElements(this, array, isCopy, taint); }
+    jshort* GetTaintedShortArrayElements(jshortArray array, jboolean* isCopy, u4* taint)
+    { return functions->GetTaintedShortArrayElements(this, array, isCopy, taint); }
+    jint* GetTaintedIntArrayElements(jintArray array, jboolean* isCopy, u4* taint)
+    { return functions->GetTaintedIntArrayElements(this, array, isCopy, taint); }
+    jlong* GetTaintedLongArrayElements(jlongArray array, jboolean* isCopy, u4* taint)
+    { return functions->GetTaintedLongArrayElements(this, array, isCopy, taint); }
+    jfloat* GetTaintedFloatArrayElements(jfloatArray array, jboolean* isCopy, u4* taint)
+    { return functions->GetTaintedFloatArrayElements(this, array, isCopy, taint); }
+    jdouble* GetTaintedDoubleArrayElements(jdoubleArray array, jboolean* isCopy, u4* taint)
+    { return functions->GetTaintedDoubleArrayElements(this, array, isCopy, taint); }
+
     void ReleaseBooleanArrayElements(jbooleanArray array, jboolean* elems,
         jint mode)
     { functions->ReleaseBooleanArrayElements(this, array, elems, mode); }
@@ -1072,6 +1142,31 @@ struct _JNIEnv {
     void ReleaseDoubleArrayElements(jdoubleArray array, jdouble* elems,
         jint mode)
     { functions->ReleaseDoubleArrayElements(this, array, elems, mode); }
+
+    void ReleaseTaintedBooleanArrayElements(jbooleanArray array, jboolean* elems,
+                                            jint mode, u4 taint)
+    { functions->ReleaseTaintedBooleanArrayElements(this, array, elems, mode, taint); }
+    void ReleaseTaintedByteArrayElements(jbyteArray array, jbyte* elems,
+                                         jint mode, u4 taint)
+    { functions->ReleaseTaintedByteArrayElements(this, array, elems, mode, taint); }
+    void ReleaseTaintedCharArrayElements(jcharArray array, jchar* elems,
+                                         jint mode, u4 taint)
+    { functions->ReleaseTaintedCharArrayElements(this, array, elems, mode, taint); }
+    void ReleaseTaintedShortArrayElements(jshortArray array, jshort* elems,
+                                          jint mode, u4 taint)
+    { functions->ReleaseTaintedShortArrayElements(this, array, elems, mode, taint); }
+    void ReleaseTaintedIntArrayElements(jintArray array, jint* elems,
+                                        jint mode, u4 taint)
+    { functions->ReleaseTaintedIntArrayElements(this, array, elems, mode, taint); }
+    void ReleaseTaintedLongArrayElements(jlongArray array, jlong* elems,
+                                         jint mode, u4 taint)
+    { functions->ReleaseTaintedLongArrayElements(this, array, elems, mode, taint); }
+    void ReleaseTaintedFloatArrayElements(jfloatArray array, jfloat* elems,
+                                          jint mode, u4 taint)
+    { functions->ReleaseTaintedFloatArrayElements(this, array, elems, mode, taint); }
+    void ReleaseTaintedDoubleArrayElements(jdoubleArray array, jdouble* elems,
+                                           jint mode, u4 taint)
+    { functions->ReleaseTaintedDoubleArrayElements(this, array, elems, mode, taint); }
 
     void GetBooleanArrayRegion(jbooleanArray array, jsize start, jsize len,
         jboolean* buf)
@@ -1098,6 +1193,23 @@ struct _JNIEnv {
         jdouble* buf)
     { functions->GetDoubleArrayRegion(this, array, start, len, buf); }
 
+    void GetTaintedBooleanArrayRegion(jbooleanArray array, jsize start, jsize len, jboolean* buf, u4* taint)
+    { functions->GetTaintedBooleanArrayRegion(this, array, start, len, buf, taint); }
+    void GetTaintedByteArrayRegion(jbyteArray array, jsize start, jsize len, jbyte* buf, u4* taint)
+    { functions->GetTaintedByteArrayRegion(this, array, start, len, buf, taint); }
+    void GetTaintedCharArrayRegion(jcharArray array, jsize start, jsize len, jchar* buf, u4* taint)
+    { functions->GetTaintedCharArrayRegion(this, array, start, len, buf, taint); }
+    void GetTaintedShortArrayRegion(jshortArray array, jsize start, jsize len, jshort* buf, u4* taint)
+    { functions->GetTaintedShortArrayRegion(this, array, start, len, buf, taint); }
+    void GetTaintedIntArrayRegion(jintArray array, jsize start, jsize len, jint* buf, u4* taint)
+    { functions->GetTaintedIntArrayRegion(this, array, start, len, buf, taint); }
+    void GetTaintedLongArrayRegion(jlongArray array, jsize start, jsize len, jlong* buf, u4* taint)
+    { functions->GetTaintedLongArrayRegion(this, array, start, len, buf, taint); }
+    void GetTaintedFloatArrayRegion(jfloatArray array, jsize start, jsize len, jfloat* buf, u4* taint)
+    { functions->GetTaintedFloatArrayRegion(this, array, start, len, buf, taint); }
+    void GetTaintedDoubleArrayRegion(jdoubleArray array, jsize start, jsize len, jdouble* buf, u4* taint)
+    { functions->GetTaintedDoubleArrayRegion(this, array, start, len, buf, taint); }
+
     void SetBooleanArrayRegion(jbooleanArray array, jsize start, jsize len,
         const jboolean* buf)
     { functions->SetBooleanArrayRegion(this, array, start, len, buf); }
@@ -1122,6 +1234,31 @@ struct _JNIEnv {
     void SetDoubleArrayRegion(jdoubleArray array, jsize start, jsize len,
         const jdouble* buf)
     { functions->SetDoubleArrayRegion(this, array, start, len, buf); }
+
+    void SetTaintedBooleanArrayRegion(jbooleanArray array, jsize start, jsize len,
+                                      const jboolean* buf, u4 taint)
+    { functions->SetTaintedBooleanArrayRegion(this, array, start, len, buf, taint); }
+    void SetTaintedByteArrayRegion(jbyteArray array, jsize start, jsize len,
+                                 const jbyte* buf, u4 taint)
+    { functions->SetTaintedByteArrayRegion(this, array, start, len, buf, taint); }
+    void SetTaintedCharArrayRegion(jcharArray array, jsize start, jsize len,
+                            const jchar* buf, u4 taint)
+    { functions->SetTaintedCharArrayRegion(this, array, start, len, buf, taint); }
+    void SetTaintedShortArrayRegion(jshortArray array, jsize start, jsize len,
+                                    const jshort* buf, u4 taint)
+    { functions->SetTaintedShortArrayRegion(this, array, start, len, buf, taint); }
+    void SetTaintedIntArrayRegion(jintArray array, jsize start, jsize len,
+                           const jint* buf, u4 taint)
+    { functions->SetTaintedIntArrayRegion(this, array, start, len, buf, taint); }
+    void SetTaintedLongArrayRegion(jlongArray array, jsize start, jsize len,
+                                   const jlong* buf, u4 taint)
+    { functions->SetTaintedLongArrayRegion(this, array, start, len, buf, taint); }
+    void SetTaintedFloatArrayRegion(jfloatArray array, jsize start, jsize len,
+                                    const jfloat* buf, u4 taint)
+    { functions->SetTaintedFloatArrayRegion(this, array, start, len, buf, taint); }
+    void SetTaintedDoubleArrayRegion(jdoubleArray array, jsize start, jsize len,
+                                     const jdouble* buf, u4 taint)
+    { functions->SetTaintedDoubleArrayRegion(this, array, start, len, buf, taint); }
 
     jint RegisterNatives(jclass clazz, const JNINativeMethod* methods,
         jint nMethods)
