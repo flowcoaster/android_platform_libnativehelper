@@ -570,9 +570,9 @@ struct JNINativeInterface {
     jchar*      (*GetTaintedCharArrayElements)(JNIEnv*, jcharArray, jboolean*, u4*);
     jshort*     (*GetTaintedShortArrayElements)(JNIEnv*, jshortArray, jboolean*, u4*);
     jint*       (*GetTaintedIntArrayElements)(JNIEnv*, jintArray, jboolean*, u4*);
-    jlong*      (*GetLongArrayElementsLongArrayElements)(JNIEnv*, jlongArray, jboolean*, u4*);
-    jfloat*     (*GetLongArrayElementsFloatArrayElements)(JNIEnv*, jfloatArray, jboolean*, u4*);
-    jdouble*    (*GetLongArrayElementsDoubleArrayElements)(JNIEnv*, jdoubleArray, jboolean*, u4*);
+    jlong*      (*GetTaintedLongArrayElements)(JNIEnv*, jlongArray, jboolean*, u4*);
+    jfloat*     (*GetTaintedFloatArrayElements)(JNIEnv*, jfloatArray, jboolean*, u4*);
+    jdouble*    (*GetTaintedDoubleArrayElements)(JNIEnv*, jdoubleArray, jboolean*, u4*);
 
     void        (*ReleaseTaintedBooleanArrayElements)(JNIEnv*, jbooleanArray,
                                                       jboolean*, jint, u4);
@@ -608,6 +608,15 @@ struct JNINativeInterface {
     void        (*SetTaintedLongArrayRegion)(JNIEnv*, jlongArray, jsize, jsize, const jlong*, u4);
     void        (*SetTaintedFloatArrayRegion)(JNIEnv*, jfloatArray, jsize, jsize, const jfloat*, u4);
     void        (*SetTaintedDoubleArrayRegion)(JNIEnv*, jdoubleArray, jsize, jsize, const jdouble*, u4);
+
+    void        (*GetTaintedStringRegion)(JNIEnv*, jstring, jsize, jsize, jchar*, u4*);
+    void        (*GetTaintedStringUTFRegion)(JNIEnv*, jstring, jsize, jsize, char*, u4*);
+
+    void*       (*GetTaintedPrimitiveArrayCritical)(JNIEnv*, jarray, u4*, jboolean*);
+    void        (*ReleaseTaintedPrimitiveArrayCritical)(JNIEnv*, jarray, void*, u4, jint);
+
+    const jchar* (*GetTaintedStringCritical)(JNIEnv*, jstring, u4*, jboolean*);
+    void        (*ReleaseTaintedStringCritical)(JNIEnv*, jstring, u4, const jchar*);
 };
 
 /*
@@ -1279,20 +1288,38 @@ struct _JNIEnv {
     void GetStringRegion(jstring str, jsize start, jsize len, jchar* buf)
     { functions->GetStringRegion(this, str, start, len, buf); }
 
+    void GetTaintedStringRegion(jstring str, jsize start, jsize len, jchar* buf, u4* taint)
+    { functions->GetTaintedStringRegion(this, str, start, len, buf, taint); }
+
     void GetStringUTFRegion(jstring str, jsize start, jsize len, char* buf)
     { return functions->GetStringUTFRegion(this, str, start, len, buf); }
+
+    void GetTaintedStringUTFRegion(jstring str, jsize start, jsize len, char* buf, u4* taint)
+    { return functions->GetTaintedStringUTFRegion(this, str, start, len, buf, taint); }
 
     void* GetPrimitiveArrayCritical(jarray array, jboolean* isCopy)
     { return functions->GetPrimitiveArrayCritical(this, array, isCopy); }
 
+    void* GetTaintedPrimitiveArrayCritical(jarray array, u4* taint, jboolean* isCopy)
+    { return functions->GetTaintedPrimitiveArrayCritical(this, array, taint, isCopy); }
+
     void ReleasePrimitiveArrayCritical(jarray array, void* carray, jint mode)
     { functions->ReleasePrimitiveArrayCritical(this, array, carray, mode); }
+
+    void ReleaseTaintedPrimitiveArrayCritical(jarray array, void* carray, u4 taint, jint mode)
+    { functions->ReleaseTaintedPrimitiveArrayCritical(this, array, carray, taint, mode); }
 
     const jchar* GetStringCritical(jstring string, jboolean* isCopy)
     { return functions->GetStringCritical(this, string, isCopy); }
 
+    const jchar* GetTaintedStringCritical(jstring string, u4* taint, jboolean* isCopy)
+    { return functions->GetTaintedStringCritical(this, string, taint, isCopy); }
+
     void ReleaseStringCritical(jstring string, const jchar* carray)
     { functions->ReleaseStringCritical(this, string, carray); }
+
+    void ReleaseTaintedStringCritical(jstring string, u4 taint, const jchar* carray)
+    { functions->ReleaseTaintedStringCritical(this, string, taint, carray); }
 
     jweak NewWeakGlobalRef(jobject obj)
     { return functions->NewWeakGlobalRef(this, obj); }
