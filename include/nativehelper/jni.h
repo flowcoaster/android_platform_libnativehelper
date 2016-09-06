@@ -566,6 +566,8 @@ struct JNINativeInterface {
 
     jstring     (*NewTaintedStringUTF)(JNIEnv*, const char*, u4);
     const char* (*GetTaintedStringUTFChars)(JNIEnv*, jstring, jboolean*, u4*);
+    void        (*ReleaseTaintedStringUTFChars)(JNIEnv*, jstring, u4, const char*);
+    jobjectArray (*NewTaintedObjectArray)(JNIEnv*, jsize, jclass, jobject, u4);
 
     jboolean*   (*GetTaintedBooleanArrayElements)(JNIEnv*, jbooleanArray, jboolean*, u4*);
     jbyte*      (*GetTaintedByteArrayElements)(JNIEnv*, jbyteArray, jboolean*, u4*);
@@ -1070,13 +1072,21 @@ struct _JNIEnv {
     void ReleaseStringUTFChars(jstring string, const char* utf)
     { functions->ReleaseStringUTFChars(this, string, utf); }
 
+    void ReleaseTaintedStringUTFChars(jstring string, u4 taint, const char* utf)
+    { functions->ReleaseTaintedStringUTFChars(this, string, taint, utf); }
+
     jsize GetArrayLength(jarray array)
     { return functions->GetArrayLength(this, array); }
 
     jobjectArray NewObjectArray(jsize length, jclass elementClass,
-        jobject initialElement)
+                                jobject initialElement)
     { return functions->NewObjectArray(this, length, elementClass,
-        initialElement); }
+                                       initialElement); }
+  
+    jobjectArray NewTaintedObjectArray(jsize length, jclass elementClass,
+                                jobject initialElement, u4 taint)
+    { return functions->NewTaintedObjectArray(this, length, elementClass,
+                                              initialElement, taint); }
 
     jobject GetObjectArrayElement(jobjectArray array, jsize index)
     { return functions->GetObjectArrayElement(this, array, index); }
