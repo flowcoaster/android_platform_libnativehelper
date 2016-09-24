@@ -569,6 +569,9 @@ struct JNINativeInterface {
     void        (*ReleaseTaintedStringUTFChars)(JNIEnv*, jstring, u4, const char*);
     jobjectArray (*NewTaintedObjectArray)(JNIEnv*, jsize, jclass, jobject, u4);
 
+    jobject     (*GetTaintedObjectArrayElement)(JNIEnv*, jobjectArray, jsize, u4*);
+    void        (*SetTaintedObjectArrayElement)(JNIEnv*, jobjectArray, jsize, jobject, u4);
+
     jboolean*   (*GetTaintedBooleanArrayElements)(JNIEnv*, jbooleanArray, jboolean*, u4*);
     jbyte*      (*GetTaintedByteArrayElements)(JNIEnv*, jbyteArray, jboolean*, u4*);
     jchar*      (*GetTaintedCharArrayElements)(JNIEnv*, jcharArray, jboolean*, u4*);
@@ -1093,6 +1096,12 @@ struct _JNIEnv {
 
     void SetObjectArrayElement(jobjectArray array, jsize index, jobject value)
     { functions->SetObjectArrayElement(this, array, index, value); }
+
+    jobject GetTaintedObjectArrayElement(jobjectArray array, jsize index, u4* taint)
+    { return functions->GetTaintedObjectArrayElement(this, array, index, taint); }
+
+    void SetTaintedObjectArrayElement(jobjectArray array, jsize index, jobject value, u4 taint)
+    { functions->SetTaintedObjectArrayElement(this, array, index, value, taint); }
 
     jbooleanArray NewBooleanArray(jsize length)
     { return functions->NewBooleanArray(this, length); }
