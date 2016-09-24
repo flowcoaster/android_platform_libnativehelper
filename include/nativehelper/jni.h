@@ -621,6 +621,9 @@ struct JNINativeInterface {
 
     const jchar* (*GetTaintedStringCritical)(JNIEnv*, jstring, u4*, jboolean*);
     void        (*ReleaseTaintedStringCritical)(JNIEnv*, jstring, u4, const jchar*);
+
+
+    jint        (*RegisterTaintedNatives)(JNIEnv*, jclass, const JNINativeMethod*, jint);
 };
 
 /*
@@ -1360,6 +1363,10 @@ struct _JNIEnv {
     /* added in JNI 1.6 */
     jobjectRefType GetObjectRefType(jobject obj)
     { return functions->GetObjectRefType(this, obj); }
+
+	jint RegisterTaintedNatives(jclass jclazz, const JNINativeMethod* methods, jint nMethods)
+	{ return functions->RegisterTaintedNatives(this, jclazz, methods, nMethods); }
+
 #endif /*__cplusplus*/
 };
 
