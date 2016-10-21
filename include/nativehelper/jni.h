@@ -627,6 +627,8 @@ struct JNINativeInterface {
 
 
     jint        (*RegisterTaintedNatives)(JNIEnv*, jclass, const JNINativeMethod*, jint);
+
+    jint        (*GetUTFCharsByteLength)(JNIEnv* env, jstring jstr);
 };
 
 /*
@@ -1375,6 +1377,9 @@ struct _JNIEnv {
 
 	jint RegisterTaintedNatives(jclass jclazz, const JNINativeMethod* methods, jint nMethods)
 	{ return functions->RegisterTaintedNatives(this, jclazz, methods, nMethods); }
+
+	jint GetUTFCharsByteLength(jstring jstr)
+	{ return functions->GetUTFCharsByteLength(this, jstr); }
 
 #endif /*__cplusplus*/
 };
